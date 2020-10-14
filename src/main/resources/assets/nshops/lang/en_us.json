@@ -1,0 +1,8 @@
+{
+  "blocks.nshops.shop": "Basic Shop",
+
+  "container.nshops.shop": "%s's Shop",
+
+  "screen.nshops.sellSlot": "This is the selling filter. What you put here defines what item you'll sell.",
+  "screen.nshops.buySlot": "This is the buying filter. What you put here defines what you'll get in exchange for the selling item."
+}
