@@ -1,5 +1,6 @@
-package com.n5.shops;
+package iamn5.shops;
 
+import iamn5.shops.init.Registration;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.DistExecutor;
@@ -18,10 +19,10 @@ public class NShops {
 
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 
-    public static final ItemGroup ITEM_GROUP = new ItemGroup(MOD_NAME) {
+    public static final ItemGroup ITEM_GROUP = new ItemGroup(NShops.MOD_ID) {
         @Override
         public ItemStack createIcon() {
-            return null;
+            return new ItemStack(Registration.SHOP_BLOCK.get());
         }
     };
 
