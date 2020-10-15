@@ -181,7 +181,7 @@ public class ShopTileEntity extends LockableTileEntity implements ISidedInventor
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
-        assert world != null;
+        if (world == null) return;
         read(world.getBlockState(packet.getPos()), packet.getNbtCompound());
     }
 
