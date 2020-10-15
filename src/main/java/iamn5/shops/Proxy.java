@@ -1,7 +1,7 @@
-package com.n5.shops;
+package iamn5.shops;
 
-import com.n5.shops.init.ModContainers;
-import com.n5.shops.init.Registration;
+import iamn5.shops.init.ModContainers;
+import iamn5.shops.init.Registration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
@@ -15,7 +15,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import javax.annotation.Nullable;
 
-class Proxy implements IProxy {
+public class Proxy implements IProxy {
     @Nullable private static MinecraftServer server;
 
     public Proxy() {

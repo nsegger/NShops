@@ -1,4 +1,4 @@
-package com.n5.shops;
+package iamn5.shops;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
