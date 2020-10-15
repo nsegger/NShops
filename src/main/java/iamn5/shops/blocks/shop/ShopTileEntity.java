@@ -1,6 +1,8 @@
 package iamn5.shops.blocks.shop;
 
+import iamn5.shops.NShops;
 import iamn5.shops.init.Registration;
+import iamn5.shops.util.OwnableObject;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,8 +22,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
-import java.lang.ref.WeakReference;
-import java.util.UUID;
 import java.util.stream.IntStream;
 
 public class ShopTileEntity extends LockableTileEntity implements ISidedInventory {
@@ -33,10 +33,7 @@ public class ShopTileEntity extends LockableTileEntity implements ISidedInventor
     public static final int[] SLOTS = IntStream.range(0, DEFAULT_SIZE).toArray();
 
     private NonNullList<ItemStack> shopContents;
-
-    private WeakReference<PlayerEntity> ownerReference;
-    private UUID ownerID;
-    private String ownerName;
+    private OwnableObject ownerData;
 
     public ShopTileEntity() {
         this(DEFAULT_SIZE);
@@ -44,50 +41,25 @@ public class ShopTileEntity extends LockableTileEntity implements ISidedInventor
 
     public ShopTileEntity(int inventorySize) {
         super(Registration.SHOP_TILE.get());
+
         shopContents = NonNullList.withSize(inventorySize, ItemStack.EMPTY);
+        ownerData = new OwnableObject();
     }
 
-    protected void setOwner(LivingEntity entity) {
-        if (entity instanceof PlayerEntity) {
-            ownerID = entity.getUniqueID();
-            ownerName = entity.getDisplayName().getString();
-            ownerReference = new WeakReference<>((PlayerEntity) entity);
-        } else {
-            ownerReference = new WeakReference<>(null);
-        }
-    }
-
-    public boolean isOwner(LivingEntity entity) {
-        return entity != null && entity.getUniqueID() == ownerID;
-    }
-
-    public PlayerEntity getOwner() {
-        PlayerEntity owner = ownerReference.get();
-        if (owner == null || !owner.isAlive()) {
-            owner = findOwner();
-            ownerReference = new WeakReference<>(owner);
-        }
-
-        return owner;
-    }
-
-    private PlayerEntity findOwner() {
-        if (ownerID == null) return null;
-        if (world == null) return null;
-
-        return world.getPlayerByUuid(ownerID);
+    public void setOwner(LivingEntity owner) {
+        ownerData.setOwner(owner);
     }
 
     @Override
     protected ITextComponent getDefaultName() {
-        return new TranslationTextComponent("container.nshops.shop", ownerName);
+        return new TranslationTextComponent("container.nshops.shop", ownerData.getOwnerName());
     }
 
     @Override
     protected Container createMenu(int windowID, PlayerInventory playerInventory) {
         PlayerEntity playerEntity = playerInventory.player;
 
-        if (isOwner(playerEntity)) {
+        if (ownerData.isOwner(playerEntity)) {
             return new ShopStorageContainer(windowID, playerInventory, this);
         }
 
@@ -189,38 +161,45 @@ public class ShopTileEntity extends LockableTileEntity implements ISidedInventor
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT tags) {
-        super.read(state, tags);
+    public void read(BlockState state, CompoundNBT tag) {
+        super.read(state, tag);
+
         shopContents = NonNullList.withSize(getSizeInventory(), ItemStack.EMPTY);
-        ItemStackHelper.loadAllItems(tags, shopContents);
+        ItemStackHelper.loadAllItems(tag, shopContents);
+        ownerData.deserializeNBT(tag.getCompound("ownerData"));
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tags) {
-        super.write(tags);
-        ItemStackHelper.saveAllItems(tags, shopContents);
-        return tags;
+    public CompoundNBT write(CompoundNBT tag) {
+        super.write(tag);
+
+        ItemStackHelper.saveAllItems(tag, shopContents);
+        tag.put("ownerData", ownerData.serializeNBT());
+
+        return tag;
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
-        super.onDataPacket(net, packet);
-        ItemStackHelper.loadAllItems(packet.getNbtCompound(), shopContents);
+        assert world != null;
+        read(world.getBlockState(packet.getPos()), packet.getNbtCompound());
     }
 
     @Nullable
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        CompoundNBT tags = getUpdateTag();
-        ItemStackHelper.saveAllItems(tags, shopContents);
+        CompoundNBT tag = getUpdateTag();
 
-        return new SUpdateTileEntityPacket(pos, 0, tags);
+        ItemStackHelper.saveAllItems(tag, shopContents);
+        tag.put("ownerData", ownerData.serializeNBT());
+
+        return new SUpdateTileEntityPacket(pos, 0, tag);
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        CompoundNBT tags = new CompoundNBT();
-        write(tags);
-        return tags;
+        CompoundNBT tag = new CompoundNBT();
+        write(tag);
+        return tag;
     }
 }
