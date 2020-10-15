@@ -11,11 +11,9 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 public class ShopStorageScreen extends ContainerScreen<ShopStorageContainer> {
     public static final ResourceLocation TEXTURE = new ResourceLocation(NShops.MOD_ID, "textures/gui/shopstorage_27.png");
-    private ShopStorageContainer shopContainer;
 
     public ShopStorageScreen(ShopStorageContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
         super(screenContainer, inv, titleIn);
-        shopContainer = screenContainer;
 
         xSize = 204;
         ySize = 167;
@@ -53,9 +51,13 @@ public class ShopStorageScreen extends ContainerScreen<ShopStorageContainer> {
 
         ITextComponent hoveringText = null;
 
-        if (isInRect(179, 14, 16, 16, x, y)) {
+        if (isInRect(ShopStorageContainer.INPUT_X + guiLeft,
+                ShopStorageContainer.INPUT_Y[0] + guiTop, 16, 16, x, y)) {
             hoveringText = new TranslationTextComponent("screen.nshops.sellSlot");
-        } else if (isInRect(179, 65, 16, 16, x, y)) {
+
+        } else if (isInRect(ShopStorageContainer.INPUT_X + guiLeft,
+                ShopStorageContainer.INPUT_Y[1] + guiTop, 16, 16, x, y))
+        {
             hoveringText = new TranslationTextComponent("screen.nshops.buySlot");
         }
 
