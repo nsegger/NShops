@@ -2,7 +2,6 @@ package iamn5.shops.blocks.shop;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import iamn5.shops.NShops;
-import iamn5.shops.init.ModBlocks;
 import iamn5.shops.init.Registration;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
@@ -18,8 +17,8 @@ public class ShopStorageScreen extends ContainerScreen<ShopStorageContainer> {
         super(screenContainer, inv, titleIn);
         shopContainer = screenContainer;
 
-        xSize = 256;
-        ySize = 256;
+        xSize = 204;
+        ySize = 167;
     }
 
     @Override
