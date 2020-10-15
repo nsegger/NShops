@@ -27,7 +27,6 @@ import javax.annotation.Nullable;
 
 public class ShopBlock extends Block {
     private static final DirectionProperty FACING = BlockStateProperties.FACING;
-    private static final int INVENTORY_SIZE = 27;
 
     public ShopBlock(Properties properties) {
         super(properties);
@@ -63,7 +62,7 @@ public class ShopBlock extends Block {
             if (tileEntity instanceof INamedContainerProvider) {
                 NetworkHooks.openGui((ServerPlayerEntity) player,
                         (INamedContainerProvider) tileEntity,
-                        packetBuffer -> packetBuffer.writeInt(INVENTORY_SIZE)
+                        packetBuffer -> packetBuffer.writeInt(ShopTileEntity.DEFAULT_SIZE)
                 );
             } else {
                 return ActionResultType.FAIL;

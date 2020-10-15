@@ -27,7 +27,7 @@ import java.util.stream.IntStream;
 public class ShopTileEntity extends LockableTileEntity implements ISidedInventory {
     public static final int SELL_SLOT = 0;
     public static final int BUY_SLOT = 1;
-    private static final int[] INPUT_SLOTS = {SELL_SLOT, BUY_SLOT};
+    public static final int[] INPUT_SLOTS = {SELL_SLOT, BUY_SLOT};
     public static final int[] OUTPUT_SLOTS = IntStream.range(2, 29).toArray();
     public static final int DEFAULT_SIZE = OUTPUT_SLOTS.length + INPUT_SLOTS.length;
     public static final int[] SLOTS = IntStream.range(0, DEFAULT_SIZE).toArray();

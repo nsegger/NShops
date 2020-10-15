@@ -1,6 +1,5 @@
 package iamn5.shops.blocks.shop;
 
-import iamn5.shops.init.ModContainers;
 import iamn5.shops.init.Registration;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -22,9 +21,11 @@ public class ShopStorageContainer extends Container {
 
     private static final int OUTPUT_X = 8;
     private static final int OUTPUT_Y = 18;
-    private static final int INPUT_X = 179;
-    private static final int[] INPUT_Y = {14, 65};
+    public static final int INPUT_X = 179;
+    public static final int[] INPUT_Y = {14, 65};
 
+    private static final int COLUMNS = 9;
+    private static final int ROWS = ShopTileEntity.OUTPUT_SLOTS.length / COLUMNS;
 
     private final IInventory inventory;
 
@@ -35,6 +36,8 @@ public class ShopStorageContainer extends Container {
     public ShopStorageContainer(int windowId, PlayerInventory playerInventory, IInventory inventory) {
         super(Registration.SHOP_STORAGE_CONTAINER.get(), windowId);
         this.inventory = inventory;
+
+        assertInventorySize(inventory, ShopTileEntity.DEFAULT_SIZE);
 
         addSlot(new Slot(inventory, 0, INPUT_X, INPUT_Y[0]) {
             @Override
@@ -51,15 +54,14 @@ public class ShopStorageContainer extends Container {
         });
 
         // Builds "chest" GUI from index 2 to 28 = 27 stacks
-        int columns = 9;
-        int rows = ShopTileEntity.OUTPUT_SLOTS.length / columns;
-        IntStream.range(0, rows).forEach(row -> {
+        AtomicInteger count = new AtomicInteger(2);
+        IntStream.range(0, ROWS).forEach(row -> {
             int y = OUTPUT_Y + (Y_SPACING * row);
 
-            IntStream.range(0, columns).forEach(index -> {
+            IntStream.range(0, COLUMNS).forEach(index -> {
                 int x = OUTPUT_X + (X_SPACING * index);
 
-                addSlot(new SlotStorage(inventory, ShopTileEntity.OUTPUT_SLOTS[index], x, y));
+                addSlot(new SlotStorage(inventory,  count.getAndIncrement(), x, y));
             });
         });
 
@@ -108,8 +110,7 @@ public class ShopStorageContainer extends Container {
             int x = startX + (X_SPACING * index);
             int y = startY + HOTBAR_SPACING + (Y_SPACING * 3);
 
-            arrayList.add(new Slot(playerInventory, count.get(), x, y));
-            count.getAndIncrement();
+            arrayList.add(new Slot(playerInventory, count.getAndIncrement(), x, y));
         });
 
         // Inventory slots
@@ -119,12 +120,9 @@ public class ShopStorageContainer extends Container {
             IntStream.range(0, 9).forEach(index -> {
                 int x = startX + (X_SPACING * index);
 
-                arrayList.add(new Slot(playerInventory, count.get(), x, y));
-                count.getAndIncrement();
+                arrayList.add(new Slot(playerInventory, count.getAndIncrement(), x, y));
             });
         });
-
-
 
         return arrayList;
     }
