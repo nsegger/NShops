@@ -18,8 +18,12 @@ import java.util.stream.IntStream;
 public class ShopStorageContainer extends Container {
     private static final int X_SPACING = 18;
     private static final int Y_SPACING = 18;
+    private static final int HOTBAR_SPACING = 4;
+
     private static final int OUTPUT_X = 8;
     private static final int OUTPUT_Y = 18;
+    private static final int INPUT_X = 179;
+    private static final int[] INPUT_Y = {14, 65};
 
 
     private final IInventory inventory;
@@ -32,14 +36,14 @@ public class ShopStorageContainer extends Container {
         super(Registration.SHOP_STORAGE_CONTAINER.get(), windowId);
         this.inventory = inventory;
 
-        addSlot(new Slot(inventory, 0, 179, 14) {
+        addSlot(new Slot(inventory, 0, INPUT_X, INPUT_Y[0]) {
             @Override
             public boolean isItemValid(ItemStack stack) {
                 return !inventory.getStackInSlot(1).isItemEqual(stack);
             }
         });
 
-        addSlot(new Slot(inventory, 1, 179, 65) {
+        addSlot(new Slot(inventory, 1, INPUT_X, INPUT_Y[1]) {
             @Override
             public boolean isItemValid(ItemStack stack) {
                 return !inventory.getStackInSlot(0).isItemEqual(stack);
@@ -59,7 +63,7 @@ public class ShopStorageContainer extends Container {
             });
         });
 
-        createPlayerSlots(8, 85, 29).forEach(this::addSlot);
+        createPlayerSlots(playerInventory,8, 85).forEach(this::addSlot);
     }
 
     @Override
@@ -76,14 +80,13 @@ public class ShopStorageContainer extends Container {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (index >= 2 && index <= 28) {
-                if (!mergeItemStack(itemstack1, 29, 66, false)) {
+            if (index < 29) {
+                // Getting items out of our storage.
+                if (!mergeItemStack(itemstack1, 29, this.inventorySlots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else {
-                if (!mergeItemStack(itemstack1, 2, 29, false)) {
+            } else if (!mergeItemStack(itemstack1, 2, 29, false)) {
                     return ItemStack.EMPTY;
-                }
             }
 
             if (itemstack1.isEmpty()) {
@@ -96,20 +99,32 @@ public class ShopStorageContainer extends Container {
         return itemstack;
     }
 
-    private ArrayList<Slot> createPlayerSlots(int startX, int startY, int startSlot) {
+    private ArrayList<Slot> createPlayerSlots(PlayerInventory playerInventory ,int startX, int startY) {
         ArrayList<Slot> arrayList = new ArrayList<>();
-        AtomicInteger count = new AtomicInteger(startSlot);
+        AtomicInteger count = new AtomicInteger(0);
 
+        // Hotbar slots
+        IntStream.range(0, 9).forEach(index -> {
+            int x = startX + (X_SPACING * index);
+            int y = startY + HOTBAR_SPACING + (Y_SPACING * 3);
+
+            arrayList.add(new Slot(playerInventory, count.get(), x, y));
+            count.getAndIncrement();
+        });
+
+        // Inventory slots
         IntStream.range(0, 3).forEach(row -> {
             int y = startY + (Y_SPACING * row);
 
             IntStream.range(0, 9).forEach(index -> {
                 int x = startX + (X_SPACING * index);
 
-                addSlot(new Slot(inventory, count.get(), x, y));
+                arrayList.add(new Slot(playerInventory, count.get(), x, y));
                 count.getAndIncrement();
             });
         });
+
+
 
         return arrayList;
     }
