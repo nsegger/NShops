@@ -1,6 +1,7 @@
-package com.n5.shops.blocks.shop;
+package iamn5.shops.blocks.shop;
 
-import com.n5.shops.init.ModContainers;
+import iamn5.shops.init.ModContainers;
+import iamn5.shops.init.Registration;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -28,7 +29,7 @@ public class ShopStorageContainer extends Container {
     }
 
     public ShopStorageContainer(int windowId, PlayerInventory playerInventory, IInventory inventory) {
-        super(ModContainers.SHOP.get(), windowId);
+        super(Registration.SHOP_STORAGE_CONTAINER.get(), windowId);
         this.inventory = inventory;
 
         addSlot(new Slot(inventory, 0, 179, 14) {

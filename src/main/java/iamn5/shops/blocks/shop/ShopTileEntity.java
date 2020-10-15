@@ -1,6 +1,6 @@
-package com.n5.shops.blocks.shop;
+package iamn5.shops.blocks.shop;
 
-import com.n5.shops.init.ModTileEntities;
+import iamn5.shops.init.Registration;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -8,7 +8,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -44,8 +43,8 @@ public class ShopTileEntity extends LockableTileEntity implements ISidedInventor
     }
 
     public ShopTileEntity(int inventorySize) {
-        super(ModTileEntities.SHOP.get());
-        NonNullList.withSize(inventorySize, ItemStack.EMPTY);
+        super(Registration.SHOP_TILE.get());
+        shopContents = NonNullList.withSize(inventorySize, ItemStack.EMPTY);
     }
 
     protected void setOwner(LivingEntity entity) {

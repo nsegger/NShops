@@ -1,8 +1,9 @@
-package com.n5.shops.blocks.shop;
+package iamn5.shops.blocks.shop;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.n5.shops.NShops;
-import com.n5.shops.init.ModBlocks;
+import iamn5.shops.NShops;
+import iamn5.shops.init.ModBlocks;
+import iamn5.shops.init.Registration;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
@@ -30,7 +31,7 @@ public class ShopStorageScreen extends ContainerScreen<ShopStorageContainer> {
 
     @Override
     protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int x, int y) {
-        ITextComponent title = ModBlocks.SHOP.get().getTranslatedName();
+        ITextComponent title = Registration.SHOP_BLOCK.get().getTranslatedName();
 
         font.drawString(matrixStack, title.getString(), 7, 6, 0x404040);
     }

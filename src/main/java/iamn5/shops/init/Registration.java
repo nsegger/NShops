@@ -1,12 +1,18 @@
-package com.n5.shops.init;
+package iamn5.shops.init;
 
-import com.n5.shops.NShops;
+import iamn5.shops.NShops;
+import iamn5.shops.blocks.shop.ShopBlock;
+import iamn5.shops.blocks.shop.ShopStorageContainer;
+import iamn5.shops.blocks.shop.ShopTileEntity;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -29,13 +35,22 @@ public final class Registration {
         ENTITIES.register(modEventBus);
         ITEMS.register(modEventBus);
         TILE_ENTITIES.register(modEventBus);
-
-        ModBlocks.register();
-        ModContainers.register();
-        ModTileEntities.register();
     }
 
     private static <T extends IForgeRegistryEntry<T>> DeferredRegister<T> createRegister(IForgeRegistry<T> registry) {
         return DeferredRegister.create(registry, NShops.MOD_ID);
     }
+
+    public static final RegistryObject<Block> SHOP_BLOCK = ModBlocks.register("shop",
+            () -> new ShopBlock(AbstractBlock.Properties.create(Material.ROCK)
+                    .hardnessAndResistance(1.5f, 12f))
+    );
+
+    public static final RegistryObject<ContainerType<ShopStorageContainer>> SHOP_STORAGE_CONTAINER = ModContainers
+            .register("shop", ShopStorageContainer::new);
+
+
+    public static final RegistryObject<TileEntityType<ShopTileEntity>> SHOP_TILE = ModTileEntities
+            .register("shop", ShopTileEntity::new, SHOP_BLOCK::get);
+
 }
