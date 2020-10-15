@@ -1,8 +1,7 @@
-package com.n5.shops.blocks.shop;
+package iamn5.shops.blocks.shop;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -10,11 +9,13 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -25,26 +26,33 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 
 public class ShopBlock extends Block {
-    private static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    private static final DirectionProperty FACING = BlockStateProperties.FACING;
     private static final int INVENTORY_SIZE = 27;
 
     public ShopBlock(Properties properties) {
         super(properties);
-        setDefaultState(getDefaultState().with(FACING, Direction.NORTH));
+    }
+
+    @Override
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
     }
 
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
-        // Place the block facing the placer
-        Direction side = placer == null ? Direction.NORTH : placer.getHorizontalFacing().getOpposite();
-        worldIn.setBlockState(pos, state.with(FACING, side));
 
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof ShopTileEntity) {
             ShopTileEntity shopTileEntity = (ShopTileEntity) tileEntity;
             shopTileEntity.setOwner(placer);
         }
+    }
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        return getDefaultState().with(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
     @SuppressWarnings("deprecation")
