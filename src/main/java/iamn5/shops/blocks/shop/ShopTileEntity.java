@@ -1,8 +1,7 @@
 package iamn5.shops.blocks.shop;
 
-import iamn5.shops.NShops;
 import iamn5.shops.init.Registration;
-import iamn5.shops.util.OwnableObject;
+import iamn5.shops.tile.base.OwnableData;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -33,7 +32,7 @@ public class ShopTileEntity extends LockableTileEntity implements ISidedInventor
     public static final int[] SLOTS = IntStream.range(0, DEFAULT_SIZE).toArray();
 
     private NonNullList<ItemStack> shopContents;
-    private OwnableObject ownerData;
+    private OwnableData ownerData;
 
     public ShopTileEntity() {
         this(DEFAULT_SIZE);
@@ -43,12 +42,10 @@ public class ShopTileEntity extends LockableTileEntity implements ISidedInventor
         super(Registration.SHOP_TILE.get());
 
         shopContents = NonNullList.withSize(inventorySize, ItemStack.EMPTY);
-        ownerData = new OwnableObject();
+        ownerData = new OwnableData();
     }
 
-    public void setOwner(LivingEntity owner) {
-        ownerData.setOwner(owner);
-    }
+    public void setOwner(LivingEntity owner) { ownerData.setOwner(owner); }
 
     @Override
     protected ITextComponent getDefaultName() {

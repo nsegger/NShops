@@ -1,6 +1,6 @@
-package iamn5.shops.util;
+package iamn5.shops.tile.base;
 
-import iamn5.shops.NShops;
+import iamn5.shops.tile.interfaces.IOwnable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -10,15 +10,16 @@ import net.minecraftforge.common.util.INBTSerializable;
 import java.lang.ref.WeakReference;
 import java.util.UUID;
 
-public class OwnableObject implements INBTSerializable<CompoundNBT> {
+public class OwnableData implements INBTSerializable<CompoundNBT>, IOwnable {
     private WeakReference<PlayerEntity> ownerReference;
     private UUID ownerID;
     private String ownerName;
 
-    public OwnableObject() {
+    public OwnableData() {
         ownerReference = new WeakReference<>(null);
     }
 
+    @Override
     public void setOwner(LivingEntity entity) {
         if (entity instanceof PlayerEntity) {
             ownerID = entity.getUniqueID();
@@ -29,6 +30,7 @@ public class OwnableObject implements INBTSerializable<CompoundNBT> {
         }
     }
 
+    @Override
     public PlayerEntity getOwner(World world) {
         PlayerEntity owner = ownerReference.get();
         if (owner == null || !owner.isAlive()) {
@@ -39,13 +41,15 @@ public class OwnableObject implements INBTSerializable<CompoundNBT> {
         return owner;
     }
 
-    private PlayerEntity findOwner(World world) {
+    @Override
+    public PlayerEntity findOwner(World world) {
         if (ownerID == null) return null;
         if (world == null) return null;
 
         return world.getPlayerByUuid(ownerID);
     }
 
+    @Override
     public boolean isOwner(LivingEntity entity) {
         return entity != null && ownerID != null && entity.getUniqueID().equals(ownerID);
     }
