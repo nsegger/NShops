@@ -1,5 +1,7 @@
 package iamn5.shops.blocks.shop;
 
+import iamn5.shops.blocks.interfaces.IHasTile;
+import iamn5.shops.init.Registration;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
@@ -15,6 +17,7 @@ import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -25,7 +28,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class ShopBlock extends Block {
+public class ShopBlock extends Block implements IHasTile<ShopTileEntity> {
     private static final DirectionProperty FACING = BlockStateProperties.FACING;
 
     public ShopBlock(Properties properties) {
@@ -105,5 +108,10 @@ public class ShopBlock extends Block {
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new ShopTileEntity();
+    }
+
+    @Override
+    public TileEntityType<? extends ShopTileEntity> getTileType() {
+        return Registration.SHOP_TILE.get();
     }
 }
