@@ -16,11 +16,11 @@ public class DataGenerators {
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 
         if (event.includeServer()) {
-            NShops.LOGGER.debug("Server gatherData");
             generator.addProvider(new LootTables(generator));
             generator.addProvider(new Recipes(generator));
-        } else if (event.includeClient()) {
-            NShops.LOGGER.debug("Client gatherData");
+        }
+
+        if (event.includeClient()) {
             generator.addProvider(new BlockStates(generator, existingFileHelper));
             generator.addProvider(new Items(generator, existingFileHelper));
         }
