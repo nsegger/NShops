@@ -82,18 +82,6 @@ public class ShopBlock extends Block implements IHasTile<ShopTileEntity> {
 
     @SuppressWarnings("deprecation")
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        TileEntity tileEntity = worldIn.getTileEntity(pos);
-        if (tileEntity instanceof IInventory) {
-            IInventory inventory = (IInventory) tileEntity;
-            InventoryHelper.dropInventoryItems(worldIn, pos, inventory);
-        }
-
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
     public boolean hasComparatorInputOverride(BlockState state) {
         return true;
     }
