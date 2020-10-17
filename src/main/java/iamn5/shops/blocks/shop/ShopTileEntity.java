@@ -1,7 +1,9 @@
 package iamn5.shops.blocks.shop;
 
+import iamn5.shops.NShops;
 import iamn5.shops.init.Registration;
 import iamn5.shops.tile.base.OwnableData;
+import iamn5.shops.tile.interfaces.IHasOwner;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,7 +25,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import javax.annotation.Nullable;
 import java.util.stream.IntStream;
 
-public class ShopTileEntity extends LockableTileEntity implements ISidedInventory {
+public class ShopTileEntity extends LockableTileEntity implements ISidedInventory, IHasOwner {
     public static final int SELL_SLOT = 0;
     public static final int BUY_SLOT = 1;
     public static final int[] INPUT_SLOTS = {SELL_SLOT, BUY_SLOT};
@@ -163,7 +165,12 @@ public class ShopTileEntity extends LockableTileEntity implements ISidedInventor
 
         shopContents = NonNullList.withSize(getSizeInventory(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(tag, shopContents);
-        ownerData.deserializeNBT(tag.getCompound("ownerData"));
+
+        CompoundNBT data = tag.getCompound("ownerData");
+
+        if (data.hasUniqueId("ownerID")) {
+            this.ownerData.deserializeNBT(data);
+        }
     }
 
     @Override
@@ -171,32 +178,58 @@ public class ShopTileEntity extends LockableTileEntity implements ISidedInventor
         super.write(tag);
 
         ItemStackHelper.saveAllItems(tag, shopContents);
-        tag.put("ownerData", ownerData.serializeNBT());
+        if (ownerData.getOwnerID() != null) {
+            tag.put("ownerData", ownerData.serializeNBT());
+        }
 
         return tag;
     }
 
+
+    /**
+     * Called when you receive a TileEntityData packet for the location this
+     * TileEntity is currently in. On the client, the NetworkManager will always
+     * be the remote server. On the server, it will be whomever is responsible for
+     * sending the packet.
+     *
+     * @param net The NetworkManager the packet originated from
+     * @param packet The data packet
+     */
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
         if (world == null) return;
+
         read(world.getBlockState(packet.getPos()), packet.getNbtCompound());
     }
 
+
+    /**
+     * Retrieves packet to send to the client whenever this Tile Entity is resynced via World.notifyBlockUpdate. For
+     * modded TE's, this packet comes back to you clientside in {@link #onDataPacket}
+     */
     @Nullable
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
         CompoundNBT tag = getUpdateTag();
 
-        ItemStackHelper.saveAllItems(tag, shopContents);
-        tag.put("ownerData", ownerData.serializeNBT());
-
         return new SUpdateTileEntityPacket(pos, 0, tag);
     }
 
+
+
+    /**
+     * Get an NBT compound to sync to the client with SPacketChunkData, used for initial loading of the chunk or when
+     * many blocks change at once. This compound comes back to you clientside in {@link handleUpdateTag}
+     */
     @Override
     public CompoundNBT getUpdateTag() {
         CompoundNBT tag = new CompoundNBT();
         write(tag);
         return tag;
+    }
+
+    @Override
+    public OwnableData getOwnerData() {
+        return ownerData;
     }
 }

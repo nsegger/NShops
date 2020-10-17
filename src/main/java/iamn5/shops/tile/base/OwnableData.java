@@ -1,5 +1,6 @@
 package iamn5.shops.tile.base;
 
+import iamn5.shops.NShops;
 import iamn5.shops.tile.interfaces.IOwnable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,6 +19,8 @@ public class OwnableData implements INBTSerializable<CompoundNBT>, IOwnable {
     public OwnableData() {
         ownerReference = new WeakReference<>(null);
     }
+
+    public UUID getOwnerID() { return ownerID; }
 
     @Override
     public void setOwner(LivingEntity entity) {
