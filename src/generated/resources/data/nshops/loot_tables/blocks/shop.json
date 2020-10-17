@@ -15,14 +15,16 @@
             {
               "function": "minecraft:copy_nbt",
               "source": "block_entity",
-              "ops": []
-            },
-            {
-              "function": "minecraft:set_contents",
-              "entries": [
+              "ops": [
                 {
-                  "type": "minecraft:dynamic",
-                  "name": "minecraft:contents"
+                  "source": "ownerData",
+                  "target": "BlockEntityTag.ownerData",
+                  "op": "replace"
+                },
+                {
+                  "source": "Items",
+                  "target": "BlockEntityTag.Items",
+                  "op": "replace"
                 }
               ]
             }
@@ -33,6 +35,17 @@
       "conditions": [
         {
           "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "functions": [
+        {
+          "function": "minecraft:set_contents",
+          "entries": [
+            {
+              "type": "minecraft:dynamic",
+              "name": "minecraft:contents"
+            }
+          ]
         }
       ]
     }

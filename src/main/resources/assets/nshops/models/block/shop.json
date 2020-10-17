@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "nshops:block/shop/back",
+    "up": "nshops:block/shop/back",
+    "north": "nshops:block/shop/front",
+    "south": "nshops:block/shop/back",
+    "east": "nshops:block/shop/left",
+    "west": "nshops:block/shop/right"
+  }
+}

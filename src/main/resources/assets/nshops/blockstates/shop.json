@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "nshops:block/shop",
+      "x": 90
+    },
+    "facing=up": {
+      "model": "nshops:block/shop",
+      "x": -90
+    },
+    "facing=north": {
+      "model": "nshops:block/shop"
+    },
+    "facing=south": {
+      "model": "nshops:block/shop",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "nshops:block/shop",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "nshops:block/shop",
+      "y": 90
+    }
+  }
+}
