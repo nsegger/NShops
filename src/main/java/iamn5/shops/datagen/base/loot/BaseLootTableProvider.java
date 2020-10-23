@@ -2,7 +2,7 @@ package iamn5.shops.datagen.base.loot;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import iamn5.shops.datagen.base.loot.table.BlockLootTablesBase;
+import iamn5.shops.datagen.base.loot.table.BaseBlockLootTables;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
@@ -20,21 +20,21 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class LootTableBaseProvider extends LootTableProvider {
+public abstract class BaseLootTableProvider extends LootTableProvider {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().disableHtmlEscaping().create();
     private final DataGenerator dataGenerator;
 
     private final Map<Block, LootTable.Builder> builders = new HashMap<>();
 
-    public LootTableBaseProvider(DataGenerator dataGeneratorIn) {
+    public BaseLootTableProvider(DataGenerator dataGeneratorIn) {
         super(dataGeneratorIn);
         this.dataGenerator = dataGeneratorIn;
     }
 
     public abstract void registerLootTables();
 
-    public BlockLootTablesBase getBlockLootTables() { return null; }
+    public BaseBlockLootTables getBlockLootTables() { return null; }
 
     public void addLootTable(Block block, LootTable.Builder builder) {
         builders.put(block, builder);
@@ -48,7 +48,7 @@ public abstract class LootTableBaseProvider extends LootTableProvider {
     public void act(DirectoryCache cache) {
         registerLootTables();
 
-        BlockLootTablesBase blockLootTables = getBlockLootTables();
+        BaseBlockLootTables blockLootTables = getBlockLootTables();
 
         if (blockLootTables != null) {
             addLootTable(blockLootTables.getTables());

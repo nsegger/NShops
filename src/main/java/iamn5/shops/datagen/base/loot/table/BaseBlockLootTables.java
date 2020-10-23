@@ -19,7 +19,7 @@ import net.minecraft.util.ResourceLocation;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BlockLootTablesBase extends BlockLootTables {
+public class BaseBlockLootTables extends BlockLootTables {
     private final Map<Block, LootTable.Builder> tables = new HashMap<>();
 
 

@@ -1,11 +1,11 @@
 package iamn5.shops.datagen;
 
-import iamn5.shops.datagen.base.loot.LootTableBaseProvider;
-import iamn5.shops.datagen.base.loot.table.BlockLootTablesBase;
+import iamn5.shops.datagen.base.loot.BaseLootTableProvider;
+import iamn5.shops.datagen.base.loot.table.BaseBlockLootTables;
 import iamn5.shops.datagen.base.loot.table.NShopsBlockLootTables;
 import net.minecraft.data.DataGenerator;
 
-public class LootTables extends LootTableBaseProvider {
+public class LootTables extends BaseLootTableProvider {
     public LootTables(DataGenerator dataGeneratorIn) {
         super(dataGeneratorIn);
     }
@@ -14,7 +14,7 @@ public class LootTables extends LootTableBaseProvider {
     public void registerLootTables() {  }
 
     @Override
-    public BlockLootTablesBase getBlockLootTables() {
+    public BaseBlockLootTables getBlockLootTables() {
         return new NShopsBlockLootTables();
     }
 }
