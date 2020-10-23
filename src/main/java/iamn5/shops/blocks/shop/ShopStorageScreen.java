@@ -2,6 +2,7 @@ package iamn5.shops.blocks.shop;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import iamn5.shops.NShops;
+import iamn5.shops.containers.ShopStorageContainer;
 import iamn5.shops.init.Registration;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;

@@ -2,7 +2,7 @@ package iamn5.shops.init;
 
 import iamn5.shops.NShops;
 import iamn5.shops.blocks.shop.ShopBlock;
-import iamn5.shops.blocks.shop.ShopStorageContainer;
+import iamn5.shops.containers.ShopStorageContainer;
 import iamn5.shops.blocks.shop.ShopTileEntity;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;

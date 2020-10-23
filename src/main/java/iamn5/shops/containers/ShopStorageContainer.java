@@ -1,41 +1,33 @@
-package iamn5.shops.blocks.shop;
+package iamn5.shops.containers;
 
+import iamn5.shops.blocks.shop.ShopTileEntity;
+import iamn5.shops.containers.base.BaseContainer;
 import iamn5.shops.init.Registration;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 
-import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
-public class ShopStorageContainer extends Container {
-    private static final int X_SPACING = 18;
-    private static final int Y_SPACING = 18;
-    private static final int HOTBAR_SPACING = 4;
-
+public class ShopStorageContainer extends BaseContainer {
     private static final int OUTPUT_X = 8;
     private static final int OUTPUT_Y = 18;
     public static final int INPUT_X = 179;
     public static final int[] INPUT_Y = {14, 65};
 
-    private static final int COLUMNS = 9;
     private static final int ROWS = ShopTileEntity.OUTPUT_SLOTS.length / COLUMNS;
-
-    private final IInventory inventory;
 
     public ShopStorageContainer(int windowId, PlayerInventory playerInventory, PacketBuffer extraData) {
         this(windowId, playerInventory, new Inventory(extraData.readInt()));
     }
 
     public ShopStorageContainer(int windowId, PlayerInventory playerInventory, IInventory inventory) {
-        super(Registration.SHOP_STORAGE_CONTAINER.get(), windowId);
-        this.inventory = inventory;
+        super(Registration.SHOP_STORAGE_CONTAINER.get(), windowId, inventory);
 
         assertInventorySize(inventory, ShopTileEntity.DEFAULT_SIZE);
 
@@ -61,16 +53,11 @@ public class ShopStorageContainer extends Container {
             IntStream.range(0, COLUMNS).forEach(index -> {
                 int x = OUTPUT_X + (X_SPACING * index);
 
-                addSlot(new SlotStorage(inventory,  count.getAndIncrement(), x, y));
+                addSlot(new Slot(inventory,  count.getAndIncrement(), x, y));
             });
         });
 
         createPlayerSlots(playerInventory,8, 85).forEach(this::addSlot);
-    }
-
-    @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return inventory.isUsableByPlayer(playerIn);
     }
 
     @Override
@@ -99,44 +86,5 @@ public class ShopStorageContainer extends Container {
         }
 
         return itemstack;
-    }
-
-    private ArrayList<Slot> createPlayerSlots(PlayerInventory playerInventory ,int startX, int startY) {
-        ArrayList<Slot> arrayList = new ArrayList<>();
-        AtomicInteger count = new AtomicInteger(0);
-
-        // Hotbar slots
-        IntStream.range(0, 9).forEach(index -> {
-            int x = startX + (X_SPACING * index);
-            int y = startY + HOTBAR_SPACING + (Y_SPACING * 3);
-
-            arrayList.add(new Slot(playerInventory, count.getAndIncrement(), x, y));
-        });
-
-        // Inventory slots
-        IntStream.range(0, 3).forEach(row -> {
-            int y = startY + (Y_SPACING * row);
-
-            IntStream.range(0, 9).forEach(index -> {
-                int x = startX + (X_SPACING * index);
-
-                arrayList.add(new Slot(playerInventory, count.getAndIncrement(), x, y));
-            });
-        });
-
-        return arrayList;
-    }
-
-
-    static class SlotStorage extends Slot {
-
-        public SlotStorage(IInventory inventoryIn, int index, int xPosition, int yPosition) {
-            super(inventoryIn, index, xPosition, yPosition);
-        }
-
-        @Override
-        public boolean isItemValid(ItemStack stack) {
-            return true;
-        }
     }
 }

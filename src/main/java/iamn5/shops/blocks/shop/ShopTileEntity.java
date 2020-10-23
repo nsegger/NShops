@@ -1,6 +1,6 @@
 package iamn5.shops.blocks.shop;
 
-import iamn5.shops.NShops;
+import iamn5.shops.containers.ShopStorageContainer;
 import iamn5.shops.init.Registration;
 import iamn5.shops.tile.base.OwnableData;
 import iamn5.shops.tile.interfaces.IHasOwner;
